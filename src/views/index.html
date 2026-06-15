@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPY-E & 123Tool | Telegram Bot Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .neo-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .neo-btn:active { transform: scale(0.96); }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+
+    <nav class="border-b border-gray-800 glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="h-9 w-9 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">123</div>
+            <div>
+                <span class="font-extrabold text-lg tracking-wider text-white">TELEGRAM BUILDER</span>
+                <span class="text-xs block text-gray-500 font-medium">Engine core platform by <span class="text-indigo-400 font-semibold">SPY-E</span></span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div id="statusBadge" class="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center space-x-2 bg-gray-800 text-gray-400">
+                <span class="h-2 w-2 rounded-full bg-gray-500 inline-block animate-pulse"></span>
+                <span>Checking...</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-1 space-y-6">
+            <div class="glass p-6 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold mb-4 flex items-center text-white">⚙️ Engine Setup</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Telegram Bot Token</label>
+                        <input type="password" id="botToken" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="123456:ABC-def...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Owner Admin ID (Telegram)</label>
+                        <input type="text" id="adminId" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-white" placeholder="612345678">
+                    </div>
+                    <div class="pt-2 flex space-x-3">
+                        <button onclick="toggleEngine('START')" class="neo-btn flex-1 bg-emerald-600 hover:bg-emerald-500 font-semibold py-2.5 rounded-xl text-sm text-white shadow-lg shadow-emerald-600/20">Dinyalakan</button>
+                        <button onclick="toggleEngine('STOP')" class="neo-btn flex-1 bg-rose-600 hover:bg-rose-500 font-semibold py-2.5 rounded-xl text-sm text-white shadow-lg shadow-rose-600/20">Matikan</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold mb-4 flex items-center text-white">🤖 AI Core System</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-300">Aktifkan AI Autopilot</span>
+                        <input type="checkbox" id="aiEnabled" class="w-5 h-5 accent-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">AI Engine Provider</label>
+                        <select id="aiProvider" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none text-white">
+                            <option value="openai">OpenAI (GPT-4o-Mini)</option>
+                            <option value="gemini">Google Gemini Pro</option>
+                            <option value="custom">Custom Webhook/Endpoint API</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">API Credentials Key</label>
+                        <input type="password" id="aiApiKey" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none text-white" placeholder="sk-... / AIzaSy...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Custom API URL (Opsional)</label>
+                        <input type="text" id="aiCustomUrl" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none text-white" placeholder="https://api.domain.com/v1/chat">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="saveConfiguration()" class="neo-btn w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition duration-150 shadow-lg shadow-indigo-600/30">💾 Simpan & Sinkronisasi Semua Data</button>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass p-6 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold mb-4 text-white">👋 Welcome Message Builder (/start)</h2>
+                <textarea id="welcomeMessage" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none text-white" placeholder="Tulis teks pembuka saat user mengklik tombol START..."></textarea>
+            </div>
+
+            <div class="glass p-6 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold mb-4 text-white">🛠️ Command Manual & Auto Response Builder</h2>
+                <form id="commandForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" onsubmit="addCustomCommand(event)">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Keyword / Trigger Command</label>
+                        <input type="text" id="cmdTrigger" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none text-white" placeholder="Contoh: /menu atau Halo" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Isi Respon Balasan</label>
+                        <input type="text" id="cmdResponse" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none text-white" placeholder="Isi pesan balasan teks..." required>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button type="submit" class="neo-btn bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-md">➕ Tambah Command</button>
+                    </div>
+                </form>
+
+                <div class="mt-6 border-t border-gray-800 pt-4">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Daftar Aktif Command</h3>
+                    <div id="commandList" class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        </div>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl shadow-xl">
+                <h2 class="text-xl font-bold mb-2 text-white">📢 Panel Push Mass Broadcast</h2>
+                <p class="text-xs text-gray-400 mb-4">Kirimkan pesan massal blast terintegrasi ke seluruh database user yang terdaftar di dalam sistem bot Anda.</p>
+                <div class="space-y-3">
+                    <textarea id="broadcastMessage" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none text-white" placeholder="Tulis info promo / update source code broadcast disini..."></textarea>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500 font-medium">Total Terdaftar: <span id="subscribersCount" class="text-indigo-400 font-bold">0</span> User</span>
+                        <button onclick="sendBroadcast()" class="neo-btn bg-amber-600 hover:bg-amber-500 text-white font-bold px-6 py-2 rounded-xl text-sm shadow-lg shadow-amber-600/20">🚀 Jalankan Blast Broadcast</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = '/api';
+
+        async function fetchDashboardData() {
+            try {
+                const res = await fetch(`${API_BASE}/stats`);
+                const data = await res.json();
+                if(data.success) {
+                    // Update Status Badge Engine
+                    const badge = document.getElementById('statusBadge');
+                    if(data.engine.status === 'RUNNING') {
+                        badge.className = "px-3 py-1.5 rounded-full text-xs font-bold uppercase bg-emerald-950 text-emerald-400 border border-emerald-500/30 flex items-center space-x-2";
+                        badge.innerHTML = `<span class="h-2 w-2 rounded-full bg-emerald-400 inline-block animate-ping"></span><span>BOT LIVE ONLINE</span>`;
+                    } else if(data.engine.status === 'ERROR') {
+                        badge.className = "px-3 py-1.5 rounded-full text-xs font-bold uppercase bg-rose-950 text-rose-400 border border-rose-500/30 flex items-center space-x-2";
+                        badge.innerHTML = `<span>❌ ERROR ENGINE</span>`;
+                    } else {
+                        badge.className = "px-3 py-1.5 rounded-full text-xs font-bold uppercase bg-gray-900 text-gray-500 border border-gray-800 flex items-center space-x-2";
+                        badge.innerHTML = `<span>OFFLINE STANDBY</span>`;
+                    }
+
+                    // Populate Input Fields Config
+                    document.getElementById('botToken').value = data.config.botToken || '';
+                    document.getElementById('adminId').value = data.config.adminId || '';
+                    document.getElementById('welcomeMessage').value = data.config.welcomeMessage || '';
+                    document.getElementById('aiEnabled').checked = data.config.aiEnabled || false;
+                    document.getElementById('aiProvider').value = data.config.aiProvider || 'openai';
+                    document.getElementById('aiApiKey').value = data.config.aiApiKey || '';
+                    document.getElementById('aiCustomUrl').value = data.config.aiCustomUrl || '';
+                    document.getElementById('subscribersCount').innerText = data.subscribersCount || 0;
+
+                    // Render List Commands Manual
+                    const listContainer = document.getElementById('commandList');
+                    listContainer.innerHTML = '';
+                    if(data.commands.length === 0) {
+                        listContainer.innerHTML = '<p class="text-xs text-gray-500">Belum ada custom command.</p>';
+                    }
+                    data.commands.forEach(cmd => {
+                        listContainer.innerHTML += `
+                            <div class="flex justify-between items-center bg-gray-900/60 border border-gray-800 p-3 rounded-xl">
+                                <div>
+                                    <span class="text-xs bg-indigo-950 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded font-mono font-bold">${cmd.trigger}</span>
+                                    <p class="text-sm text-gray-300 mt-1">${cmd.response}</p>
+                                </div>
+                                <button onclick="deleteCommand(${cmd.$loki})" class="text-xs bg-rose-950 hover:bg-rose-900 text-rose-400 border border-rose-500/20 px-3 py-1.5 rounded-lg transition">Hapus</button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error("Gagal sinkronisasi data API.", err);
+            }
+        }
+
+        async function saveConfiguration() {
+            const payload = {
+                botToken: document.getElementById('botToken').value,
+                adminId: document.getElementById('adminId').value,
+                welcomeMessage: document.getElementById('welcomeMessage').value,
+                aiEnabled: document.getElementById('aiEnabled').checked,
+                aiProvider: document.getElementById('aiProvider').value,
+                aiApiKey: document.getElementById('aiApiKey').value,
+                aiCustomUrl: document.getElementById('aiCustomUrl').value
+            };
+
+            const res = await fetch(`${API_BASE}/settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            alert(data.message);
+            fetchDashboardData();
+        }
+
+        async function toggleEngine(action) {
+            const res = await fetch(`${API_BASE}/engine`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            });
+            const data = await res.json();
+            alert(data.message);
+            fetchDashboardData();
+        }
+
+        async function addCustomCommand(e) {
+            e.preventDefault();
+            const payload = {
+                trigger: document.getElementById('cmdTrigger').value,
+                response: document.getElementById('cmdResponse').value
+            };
+            const res = await fetch(`${API_BASE}/commands`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if(!data.success) alert(data.message);
+            document.getElementById('commandForm').reset();
+            fetchDashboardData();
+        }
+
+        async function deleteCommand(id) {
+            if(!confirm('Hapus command ini?')) return;
+            await fetch(`${API_BASE}/commands/${id}`, { method: 'DELETE' });
+            fetchDashboardData();
+        }
+
+        async function sendBroadcast() {
+            const msg = document.getElementById('broadcastMessage').value;
+            if(!msg) return alert('Pesan tidak boleh kosong!');
+            const res = await fetch(`${API_BASE}/broadcast`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            alert(data.message);
+            document.getElementById('broadcastMessage').value = '';
+        }
+
+        // Loop Sinkronisasi interval konstan otomatis (Polled Realtime)
+        setInterval(fetchDashboardData, 5000);
+        window.onload = fetchDashboardData;
+    </script>
+</body>
+</html>

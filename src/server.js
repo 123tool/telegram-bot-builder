@@ -1,24 +1,20 @@
 const express = require('express');
-const path = require('path');
 const apiRoutes = require('./routes/api.routes');
+const webRoutes = require('./routes/web.routes');
 const botManager = require('./services/bot.manager');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Body parser JSON middleware
+// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve Dashboard Frontend SPA
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views/index.html'));
-});
-
-// Routing API Control Panel Builder
+// Routing UI Dashboard & REST API Control Panel Builder
+app.use('/', webRoutes);
 app.use('/api', apiRoutes);
 
-// Menangani Error Global
+// Menangani Error Global (Anti-Crash System)
 app.use((err, req, res, next) => {
     console.error('[SERVER CORE ERROR]', err.stack);
     res.status(500).json({ success: false, message: 'Internal Server Error.' });

@@ -67,7 +67,7 @@ npm install
 
 ## ​🛠️ TROUBLESHOOTING & PENANGANAN MASALAH
 
-- ​Masalah 1: Bot Tiba-tiba Mati di Latar Belakang saat Layar HP Terkunci
+- ​Masalah 1 : Bot Tiba-tiba Mati di Latar Belakang saat Layar HP Terkunci
 - ​Solusi : Sistem Android menerapkan manajemen baterai agresif. Tarik bar notifikasi Termux Anda ke bawah, klik "Acquire Wakelock" agar CPU Android tetap diizinkan berjalan tinggi saat kondisi layar padam. Dan pastikan aplikasi Termux Anda diatur ke mode "Don't Optimize" di pengaturan Baterai Android.
 
 - ​Masalah 2 : Error Token Invalid setelah Menyimpan Token Baru
